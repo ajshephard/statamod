@@ -40,7 +40,7 @@ end if
 sizeReadStata = size(readStataVar)
 
 if (sizeReadStata.lt.stataFile%nobs) then
-    call statamodWarn('number of observations exceeds array storage')
+    call statamodError('number of observations exceeds array storage')
 end if
 
 !for access from memory
