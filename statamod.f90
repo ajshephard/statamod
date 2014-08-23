@@ -197,7 +197,7 @@ contains
         end if
 
         call getUnit(stataFile%saveUnit)
-        open(UNIT=stataFile%saveUnit,FILE=fileName,ACTION='write',STATUS='REPLACE',FORM='BINARY',IOSTAT=ios)
+        open(UNIT=stataFile%saveUnit,FILE=fileName,ACTION='write',STATUS='REPLACE',ACCESS='stream',IOSTAT=ios)
 
         if (ios /= 0) then
             call statamodError('error saving file '//fileName)
