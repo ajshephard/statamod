@@ -9,7 +9,8 @@ from within Fortran. It is written by Andrew Shephard (<asheph@econ.upenn.edu>)
 Stata read support
 ------------------
 
-The reading of variables from a Stata .dta file is supported through the following subroutines and functions.
+The reading of variables from a Stata .dta file is supported through the following 
+subroutines and functions.
 
 ```subroutine openStata(filename [,cache])```
 
@@ -85,14 +86,14 @@ Stata write support
 
 There are a small number of subroutines that provide Stata .dta write functionality.
 
-`broutine saveStata(fileName, obs [,label])`
+`subroutine saveStata(fileName, obs [,label])`
             
 This opens the Stata .dta file filename for saving. You must specify the 
 number of observations *obs* to save (saving is on a variable by variable basis), 
 and you can optionaly specify a label for the dataset. It will save the dataset 
 in the Stata 7 SE file format.
 
-```subroutine writeStata(thisVar, thisName [,thisLabel])```
+`subroutine writeStata(thisVar, thisName [,thisLabel])`
 
 Saves the Fortran variable *thisVar* with the Stata variable name *thisName*. You can 
 optionally label the variable with *thisLabel*. You should call `writeStata` for 
