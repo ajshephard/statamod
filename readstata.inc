@@ -20,9 +20,9 @@ integer(i4) :: tempST_long
 real(sp)    :: tempST_float
 real(dp)    :: tempST_double
 
-integer(i4) :: i, thisVarno, filePointer, varStart, sizeReadStata
+integer(i4) :: i, thisVarno, varStart, sizeReadStata
+integer     :: filePos
 
-integer :: filePos
 
 if (.not. stataFile%init) then
     call statamodError('STATA file is not open')

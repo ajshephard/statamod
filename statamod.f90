@@ -114,7 +114,7 @@ module stataMod
 
     end type stata
 
-    type(stata) :: statafile
+    type(stata), save :: statafile
 
     interface writestata
         module procedure writeStataInt1
@@ -550,7 +550,7 @@ contains
         logical,      intent(in), optional :: cache
 
         logical       :: ex
-        integer(i4)   :: ios, filePointer
+        integer(i4)   :: ios
         integer(i4)   :: i, j
 
         integer(i1)   :: tempInt1 !temporary integers
