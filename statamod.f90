@@ -346,7 +346,7 @@ contains
 
         implicit none
 
-        logical, optional :: cache
+        logical, intent(in), optional :: cache
 
         integer(i4)  :: ios, tempInt4, i, j
         character(1) :: unsignedByte !unsigned integers are not supported. use this as work around
