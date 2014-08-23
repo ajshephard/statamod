@@ -24,6 +24,7 @@ module stataMod
     public :: openStata, saveStata, closeOpenStata, closeSaveStata, readStata
     public :: writeStata, descStata, nobsStata, nvarStata, existStata
     public :: maxST_byte, maxST_int, maxST_long, maxST_float, maxST_double
+    public :: minST_byte, minST_int, minST_long, minST_float, minST_double
     public :: sampleStata
 
     !data types
@@ -42,8 +43,8 @@ module stataMod
     integer,  parameter :: minST_byte   = -127
     integer,  parameter :: minST_int    = -32767
     integer,  parameter :: minST_long   = -2147483647
-!    real(sp), parameter :: minST_float  = Z'7effffff'         !approx -1.701e+38
-!    real(dp), parameter :: minST_double = Z'7fdfffffffffffff' !approx -8.988e+307
+    real(sp), parameter :: minST_float  = Z'feffffff'         !approx -1.701e+38
+    real(dp), parameter :: minST_double = Z'ffefffffffffffff' !approx -1.798e+308
 
     type :: position
         integer :: start
