@@ -196,7 +196,8 @@ contains
             stataFile%saveLabel = char(0)
         end if
 
-        open(NEWUNIT=stataFile%saveUnit,FILE=fileName,ACTION='write',STATUS='REPLACE',FORM='BINARY',IOSTAT=ios)
+        call getUnit(stataFile%saveUnit)
+        open(UNIT=stataFile%saveUnit,FILE=fileName,ACTION='write',STATUS='REPLACE',FORM='BINARY',IOSTAT=ios)
 
         if (ios /= 0) then
             call statamodError('error saving file '//fileName)
@@ -578,7 +579,8 @@ contains
             call statamodError('file '//fileName//' does not exist')
         end if
 
-        open(NEWUNIT=stataFile%unit,FILE=fileName,action='read',status='old',access='stream',iostat=ios)
+        call getUnit(stataFile%unit)
+        open(UNIT=stataFile%unit,FILE=fileName,action='read',status='old',access='stream',iostat=ios)
 
         ! error check
         if (ios/=0) then
@@ -1143,5 +1145,22 @@ contains
         return
 
     end subroutine statamodMsg
+
+    subroutine getUnit(funit)
+        use, intrinsic :: iso_fortran_env
+        implicit none
+        integer, intent(out) :: funit
+        integer        :: i
+        logical        :: opend
+        integer, parameter   :: stdout = output_unit
+        integer, parameter   :: maxunit = 99
+        do i = stdout+1, maxunit
+            inquire(unit=i, opened=opend)
+            if (.not. opend) then
+                funit = i
+                exit
+            endif
+        end do
+    end subroutine getUnit
 
 end module stataMod
