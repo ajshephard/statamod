@@ -1,5 +1,5 @@
 
-!    This file is part of STATAMOD. Copyright (c) 2006-2010 Andrew Shephard
+!    This file is part of STATAMOD. Copyright (c) 2006-2014 Andrew Shephard
 !
 !    STATAMOD is free software: you can redistribute it and/or modify
 !    it under the terms of the GNU General Public License as published by
@@ -35,12 +35,12 @@ if (size(thisVar) /= stataFile%saveNObs) then
     call statamodError('variable '//trim(thisName)//' is the wrong dimension. '// &
         & 'Expecting an array of size '//trim(adjustl(TempStr33))//'*1')
 end if
-    
+
 if (.not. stataFile%saveOnce) then
-   
+
     ! first var to be written
     allocate(stataFile%saveCurr, STAT=ios);
-    
+
     if (ios /= 0) then
         call statamodError('error allocating memory')
         !close(stataFile%saveUnit)
@@ -51,16 +51,16 @@ if (.not. stataFile%saveOnce) then
     end if
 
     stataFile%saveHead => stataFile%saveCurr
-    
+
     stataFile%saveOnce = .true.
-    
-end if    
-    
+
+end if
+
 if (stataFile%saveNVar>=32767) then
     call statamodError('attempt to exceed Stata maxvar limit (32767)')
     !close(stataFile%saveUnit)
 end if
-    
+
  ! var label
 if (present(thisLabel)) then
     tempInt1 = len(thisLabel) + 1
@@ -86,12 +86,12 @@ select case(ichar(thisName(1:1)))
             & 'Names can not begin with a numeric character')
     case default
 end select
-                    
-! now store in memory                    
+
+! now store in memory
 tempInt1 = len(trim(thisName)) + 1
 stataFile%saveCurr%name = trim(thisName)
 stataFile%saveCurr%name(tempInt1:33) = char(0)
-           
+
 ! and now, check unique
 tempStr33 = stataFile%saveCurr%name
 stataFile%saveCurr => stataFile%saveHead
@@ -99,6 +99,6 @@ stataFile%saveCurr => stataFile%saveHead
 do while(associated(stataFile%saveCurr%next))
     if (tempStr33 == stataFile%saveCurr%name) then
         call statamodError('a variable already exists with name '//trim(tempStr33))
-    end if 
+    end if
     stataFile%saveCurr => stataFile%saveCurr%next
 end do

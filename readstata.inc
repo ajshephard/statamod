@@ -1,5 +1,5 @@
 
-!    This file is part of STATAMOD. Copyright (c) 2006-2010 Andrew Shephard
+!    This file is part of STATAMOD. Copyright (c) 2006-2014 Andrew Shephard
 !
 !    STATAMOD is free software: you can redistribute it and/or modify
 !    it under the terms of the GNU General Public License as published by
@@ -19,8 +19,10 @@ integer(i2) :: tempST_int
 integer(i4) :: tempST_long
 real(sp)    :: tempST_float
 real(dp)    :: tempST_double
-                                                  
+
 integer(i4) :: i, thisVarno, filePointer, varStart, sizeReadStata
+
+integer :: filePos
 
 if (.not. stataFile%init) then
     call statamodError('STATA file is not open')
@@ -45,15 +47,15 @@ end if
 
 if (stataFile%cache) then
 
-    varStart = stataFile%stataPosition%offset(thisVarno) + 1 !column location of varname
-   
+    varStart = stataFile%stataPosition%offset(thisVarno) + 1 ! column location of varname
+
     !if (sizeReadStata==stataFile%nobs) then
         !use transfer intrinsic to cast data
         select case(stataFile%typlist(thisVarno))
             case(1_i2:244_i2) !str
                 call statamodWarn('strings are not supported; setting array to zero')
                 readStataVar(1:stataFile%nobs) = 0
-            case(251_i2)   !ST_byte               
+            case(251_i2)   !ST_byte
                 readStataVar(1:stataFile%nobs) = transfer(stataFile%theseData(varStart:varStart,:),(/0_i1/))
             case(252_i2)   !ST_int
                 readStataVar(1:stataFile%nobs) = transfer(stataFile%theseData(varStart:(varStart+1),:),(/0_i2/))
@@ -70,57 +72,50 @@ if (stataFile%cache) then
     !end if
 
 else !disk access... can be slow but doesn't require as much memory
-            
+
     !move file pointer to start of data
 
-    filePointer = fseek(stataFile%unit,stataFile%stataPosition%start,0)
-    filePointer = fseek(stataFile%unit,stataFile%stataPosition%offset(thisVarno),1)
+    filePos = stataFile%stataPosition%varpos(thisVarno)
 
-    if (filePointer/=0) then
-        call statamodError('error moving file pointer')
-        !write (6,*)  'STATAMOD ERROR: error moving file pointer'
-        !stop
-    end if
-    
     select case(stataFile%typlist(thisVarno))
         case(1_i2:244_i2) !str
             call statamodWarn('strings are not supported; setting array to zero')
-            readStataVar = 0    
-        case(251_i2)   !ST_byte             
+            readStataVar = 0
+        case(251_i2)   !ST_byte
             do i=1, min(sizeReadStata,stataFile%nobs)
-                read(stataFile%unit) tempST_byte
+                read(stataFile%unit,POS=filePos) tempST_byte
                 readStataVar(i:i)  = tempST_byte
-                filePointer = fseek(stataFile%unit,stataFile%stataPosition%nvarOffset - 1,1)      
-            end do                    
+                filePos = filePos + stataFile%stataPosition%nvarOffset
+            end do
         case(252_i2)   !ST_int
             do i=1, min(sizeReadStata,stataFile%nobs)
-                read(stataFile%unit) tempST_int
+                read(stataFile%unit,POS=filePos) tempST_int
                 readStataVar(i:i)  = tempST_int
-                filePointer = fseek(stataFile%unit,stataFile%stataPosition%nvarOffset - 2,1)      
-            end do   
+                filePos = filePos + stataFile%stataPosition%nvarOffset
+            end do
         case(253_i2)   !ST_long
             do i=1, min(sizeReadStata,stataFile%nobs)
-                read(stataFile%unit) tempST_long
+                read(stataFile%unit,POS=filePos) tempST_long
                 readStataVar(i:i)  = tempST_long
-                filePointer = fseek(stataFile%unit,stataFile%stataPosition%nvarOffset - 4,1)      
+                filePos = filePos + stataFile%stataPosition%nvarOffset
             end do
         case(254_i2)   !ST_float
             do i=1, min(sizeReadStata,stataFile%nobs)
-                read(stataFile%unit) tempST_float
+                read(stataFile%unit,POS=filePos) tempST_float
                 readStataVar(i:i)  = tempST_float
-                filePointer = fseek(stataFile%unit,stataFile%stataPosition%nvarOffset - 4,1)      
-            end do                         
+                filePos = filePos + stataFile%stataPosition%nvarOffset
+            end do
         case(255_i2)   !ST_double
             do i=1, min(sizeReadStata,stataFile%nobs)
-                read(stataFile%unit) tempST_double
+                read(stataFile%unit,POS=filePos) tempST_double
                 readStataVar(i:i)  = tempST_double
-                filePointer = fseek(stataFile%unit,stataFile%stataPosition%nvarOffset - 8,1)      
-            end do                        
+                filePos = filePos + stataFile%stataPosition%nvarOffset
+            end do
         case default
             call statamodWarn('unknown data type; setting array to zero')
             readStataVar = 0
-    end select 
-                
+    end select
+
 end if
 
 if (stataFile%doSample) then
