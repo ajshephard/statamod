@@ -1,4 +1,3 @@
-
 STATAMOD
 ========
 
@@ -12,7 +11,7 @@ Stata read support
 The reading of variables from a Stata .dta file is supported through the following 
 subroutines and functions.
 
-```subroutine openStata(filename [,cache])```
+`subroutine openStata(filename [,cache])`
 
 This opens the Stata .dta file *filename*. A dataset must be open before any other
 (reading) STATAMOD commands can be used. By default, the entire dataset is loaded
@@ -21,7 +20,7 @@ then it will not do this. Instead, it will just load the variables as requested
 from disk. As variables are stored non-sequentially in the Stata .dta format, this 
 can be significantly slower than memory access.
 
-```subroutine descStata()```
+`subroutine descStata()`
 
 This describes the open dataset, printing output to the standard output unit. It is
 much like Stata's own describe command.
@@ -112,10 +111,11 @@ If you receive a stack overflow error when using the subroutine readStata()
 increase the stack size, or specify cache=.false. in the calling options.
 This may happen with large data sets.
 
-STATAMOD should be able to read Stata .dta files for versions 5 to 11. I have not
+STATAMOD should be able to read Stata .dta files for versions 5 to 12. I have not
 been able to test data created with Stata version 5 or 6 and neither do I have a
 detailed description of the file format implemented in these versions. Please
-contact me if such datasets produces any unexpected results
+contact me if such datasets produces any unexpected results. Support for Stata
+.dta files for version 13 will be provided in a future release.
 
 Software license
 ----------------
