@@ -1,5 +1,5 @@
 
-!    This file is part of STATAMOD. Copyright (c) 2006-2014 Andrew Shephard
+!    This file is part of STATAMOD. Copyright (c) 2006-2016 Andrew Shephard
 !
 !    STATAMOD is free software: you can redistribute it and/or modify
 !    it under the terms of the GNU General Public License as published by
