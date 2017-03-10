@@ -20,14 +20,14 @@ module stataMod
 
     private
 
-    !public access
+    ! public access
     public :: openStata, saveStata, closeOpenStata, closeSaveStata, readStata
     public :: writeStata, descStata, nobsStata, nvarStata, existStata
     public :: sampleStata
 
-    !data types
-    integer, parameter :: sp = selected_real_kind(6,30)
-    integer, parameter :: dp = selected_real_kind(15,100)
+    ! data types
+    integer, parameter :: sp = selected_real_kind(6, 30)
+    integer, parameter :: dp = selected_real_kind(15, 100)
     integer, parameter :: i4 = selected_int_kind(5)
     integer, parameter :: i2 = selected_int_kind(3)
     integer, parameter :: i1 = selected_int_kind(1)
@@ -35,14 +35,14 @@ module stataMod
     integer,  parameter, public :: maxST_byte   = 100
     integer,  parameter, public :: maxST_int    = 32740
     integer,  parameter, public :: maxST_long   = 2147483620
-    real(sp), parameter, public :: maxST_float  = real(Z'7effffff',sp)         !approx +1.701e+38
-    real(dp), parameter, public :: maxST_double = real(Z'7fdfffffffffffff',dp) !approx +8.988e+307
+    real(sp), parameter, public :: maxST_float  = real(Z'7effffff', sp)         ! approx +1.701e+38
+    real(dp), parameter, public :: maxST_double = real(Z'7fdfffffffffffff', dp) ! approx +8.988e+307
 
     integer,  parameter, public :: minST_byte   = -127
     integer,  parameter, public :: minST_int    = -32767
     integer,  parameter, public :: minST_long   = -2147483647
-    real(sp), parameter, public :: minST_float  = real(Z'feffffff',sp)         !approx -1.701e+38
-    real(dp), parameter, public :: minST_double = real(Z'ffefffffffffffff',dp) !approx -1.798e+308
+    real(sp), parameter, public :: minST_float  = real(Z'feffffff', sp)         ! approx -1.701e+38
+    real(dp), parameter, public :: minST_double = real(Z'ffefffffffffffff', dp) ! approx -1.798e+308
 
     type :: position
         integer :: start
@@ -196,17 +196,17 @@ contains
         end if
 
         call getUnit(stataFile%saveUnit)
-        open(UNIT=stataFile%saveUnit,FILE=fileName,ACTION='write',STATUS='REPLACE',ACCESS='stream',IOSTAT=ios)
+        open(UNIT = stataFile%saveUnit, FILE = fileName, ACTION = 'write', STATUS = 'REPLACE', ACCESS = 'stream', IOSTAT = ios)
 
         if (ios /= 0) then
-            call statamodError('error saving file '//fileName)
+            call statamodError('error saving file ' // fileName)
         end if
 
         !save as stata 7 s/e
-        write(stataFile%saveUnit, IOSTAT=ios) 111_i1 ! Stata 7 S/E
-        write(stataFile%saveUnit, IOSTAT=ios) 2_i1   ! byte order
-        write(stataFile%saveUnit, IOSTAT=ios) 1_i1   ! filetype
-        write(stataFile%saveUnit, IOSTAT=ios) 0_i1   ! junk
+        write(stataFile%saveUnit, IOSTAT = ios) 111_i1 ! Stata 7 S/E
+        write(stataFile%saveUnit, IOSTAT = ios) 2_i1   ! byte order
+        write(stataFile%saveUnit, IOSTAT = ios) 1_i1   ! filetype
+        write(stataFile%saveUnit, IOSTAT = ios) 0_i1   ! junk
 
         if (ios /= 0) then
             call statamodError('error writing file header')
@@ -230,7 +230,7 @@ contains
         stataFile%saveDim = stataFile%saveDim + 4
 
         ! copy contents
-        allocate(stataFile%saveCurr%valReal4(stataFile%saveNObs), STAT=ios)
+        allocate(stataFile%saveCurr%valReal4(stataFile%saveNObs), STAT = ios)
 
         if (ios /= 0) then
             call statamodError('error allocating memory')
@@ -255,7 +255,7 @@ contains
         stataFile%saveDim = stataFile%saveDim + 8
 
         ! copy contents
-        allocate(stataFile%saveCurr%valReal8(stataFile%saveNObs), STAT=ios)
+        allocate(stataFile%saveCurr%valReal8(stataFile%saveNObs), STAT = ios)
 
         if (ios /= 0) then
             call statamodError('error allocating memory')
@@ -280,7 +280,7 @@ contains
         stataFile%saveDim = stataFile%saveDim + 1
 
         ! copy contents
-        allocate(stataFile%saveCurr%valInt1(stataFile%saveNObs), STAT=ios)
+        allocate(stataFile%saveCurr%valInt1(stataFile%saveNObs), STAT = ios)
 
         if (ios /= 0) then
             call statamodError('error allocating memory')
@@ -305,7 +305,7 @@ contains
         stataFile%saveDim = stataFile%saveDim + 2
 
         ! copy contents
-        allocate(stataFile%saveCurr%valInt2(stataFile%saveNObs), STAT=ios)
+        allocate(stataFile%saveCurr%valInt2(stataFile%saveNObs), STAT = ios)
 
         if (ios /= 0) then
             call statamodError('error allocating memory')
@@ -330,7 +330,7 @@ contains
         stataFile%saveDim = stataFile%saveDim + 4
 
         ! copy contents
-        allocate(stataFile%saveCurr%valInt4(stataFile%saveNObs), STAT=ios)
+        allocate(stataFile%saveCurr%valInt4(stataFile%saveNObs), STAT = ios)
 
         if (ios /= 0) then
             call statamodError('error allocating memory')
@@ -351,11 +351,11 @@ contains
         integer(i4)  :: ios, tempInt4, i, j
         character(1) :: unsignedByte !unsigned integers are not supported. use this as work around
 
-        integer(i1),   dimension(2*(stataFile%saveNVar+1)) :: srtlist
-        character(12), dimension(stataFile%saveNVar)       :: fmtlist
-        character(33), dimension(stataFile%saveNVar)       :: lbllist
+        integer(i1),   dimension(2*(stataFile%saveNVar + 1)) :: srtlist
+        character(12), dimension(stataFile%saveNVar)         :: fmtlist
+        character(33), dimension(stataFile%saveNVar)         :: lbllist
 
-        integer(i1), dimension(5)   :: expfield
+        integer(i1), dimension(5) :: expfield
 
         character(stataFile%saveDim), allocatable, dimension(:) :: dataset
 
@@ -363,10 +363,10 @@ contains
             call statamodError('no file have been specified for saving')
         end if
 
-        write(stataFile%saveUnit, IOSTAT=ios) stataFile%saveNVar  !Variables
-        write(stataFile%saveUnit, IOSTAT=ios) stataFile%saveNObs  !Observations
-        write(stataFile%saveUnit, IOSTAT=ios) stataFile%saveLabel !Label
-        write(stataFile%saveUnit, IOSTAT=ios) stataFile%saveTime  !time stamp
+        write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveNVar  !Variables
+        write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveNObs  !Observations
+        write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveLabel !Label
+        write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveTime  !time stamp
 
         if (ios /= 0) then
             call statamodError('error writing file specific header information')
@@ -380,7 +380,7 @@ contains
 
         do i = 1, stataFile%saveNVar
             unsignedByte = char(stataFile%saveCurr%valType) !work around
-            write(stataFile%saveUnit, IOSTAT=ios) unsignedByte
+            write(stataFile%saveUnit, IOSTAT = ios) unsignedByte
             stataFile%saveCurr => stataFile%saveCurr%next
         end do !i
 
@@ -388,21 +388,21 @@ contains
         stataFile%saveCurr => stataFile%saveHead
 
         do i = 1, stataFile%saveNVar
-            write(stataFile%saveUnit, IOSTAT=ios) stataFile%saveCurr%name
+            write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveCurr%name
             stataFile%saveCurr => stataFile%saveCurr%next
         end do !i
 
         ! srtlist (unsorted)
         srtlist = 0
-        write(stataFile%saveUnit, IOSTAT=ios) srtlist
+        write(stataFile%saveUnit, IOSTAT = ios) srtlist
 
         ! fmtlist (use default stata format)
         fmtlist = '%8.0g'//char(0)
-        write(stataFile%saveUnit, IOSTAT=ios) fmtlist
+        write(stataFile%saveUnit, IOSTAT = ios) fmtlist
 
         ! lbllist
         lbllist = char(0)
-        write(stataFile%saveUnit, IOSTAT=ios) lbllist
+        write(stataFile%saveUnit, IOSTAT = ios) lbllist
 
         if (ios /= 0) then
             call statamodError('error writing descriptors')
@@ -413,7 +413,7 @@ contains
         stataFile%saveCurr => stataFile%saveHead
 
         do i = 1, stataFile%saveNVar
-            write(stataFile%saveUnit, IOSTAT=ios) stataFile%saveCurr%label
+            write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveCurr%label
             stataFile%saveCurr => stataFile%saveCurr%next
         end do !i
 
@@ -424,7 +424,7 @@ contains
         ! write expansion fields
 
         expfield = 0
-        write(stataFile%saveUnit, IOSTAT=ios) expfield
+        write(stataFile%saveUnit, IOSTAT = ios) expfield
 
         if (ios /= 0) then
             call statamodError('error writing expansion fields')
@@ -444,7 +444,7 @@ contains
             ! an appropriately sized character array and use the transfer function
             ! to copy exact bit pattern
 
-            allocate(dataset(stataFile%saveNObs), STAT=ios)
+            allocate(dataset(stataFile%saveNObs), STAT = ios)
 
             if (ios /= 0) then
                 call statamodError('error allocating memory for variable writing. Use closeSaveStata(.false.).')
@@ -457,19 +457,19 @@ contains
 
                 select case(stataFile%saveCurr%valType)
                     case(251_i2)   !ST_byte
-                        dataset(:)(tempInt4:tempInt4)   = transfer(stataFile%saveCurr%valInt1,(/1_'0'/))
+                        dataset(:)(tempInt4:tempInt4)   = transfer(stataFile%saveCurr%valInt1, (/1_'0'/))
                         tempInt4 = tempInt4 + 1
                     case(252_i2)   !ST_int
-                        dataset(:)(tempInt4:tempInt4+1) = transfer(stataFile%saveCurr%valInt2,(/1_'00'/))
+                        dataset(:)(tempInt4:tempInt4+1) = transfer(stataFile%saveCurr%valInt2, (/1_'00'/))
                         tempInt4 = tempInt4 + 2
                     case(253_i2)   !ST_long
-                        dataset(:)(tempInt4:tempInt4+3) = transfer(stataFile%saveCurr%valInt4,(/1_'0000'/))
+                        dataset(:)(tempInt4:tempInt4+3) = transfer(stataFile%saveCurr%valInt4, (/1_'0000'/))
                         tempInt4 = tempInt4 + 4
                     case(254_i2)   !ST_float
-                        dataset(:)(tempInt4:tempInt4+3) = transfer(stataFile%saveCurr%valReal4,(/1_'0000'/))
+                        dataset(:)(tempInt4:tempInt4+3) = transfer(stataFile%saveCurr%valReal4, (/1_'0000'/))
                         tempInt4 = tempInt4 + 4
                     case(255_i2)   !ST_double
-                        dataset(:)(tempInt4:tempInt4+7) = transfer(stataFile%saveCurr%valReal8,(/1_'00000000'/))
+                        dataset(:)(tempInt4:tempInt4+7) = transfer(stataFile%saveCurr%valReal8, (/1_'00000000'/))
                         tempInt4 = tempInt4 + 8
                     case default
                         call statamodError('unknown data type')
@@ -479,7 +479,7 @@ contains
 
             end do !i
 
-            write(stataFile%saveUnit, IOSTAT=ios) dataset
+            write(stataFile%saveUnit, IOSTAT = ios) dataset
 
         else
 
@@ -491,15 +491,15 @@ contains
 
                     select case(stataFile%saveCurr%valType)
                         case(251_i2)   !ST_byte
-                            write(stataFile%saveUnit,IOSTAT=ios) stataFile%saveCurr%valInt1(i:i)
+                            write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveCurr%valInt1(i:i)
                         case(252_i2)   !ST_int
-                            write(stataFile%saveUnit,IOSTAT=ios) stataFile%saveCurr%valInt2(i:i)
+                            write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveCurr%valInt2(i:i)
                         case(253_i2)   !ST_long
-                            write(stataFile%saveUnit,IOSTAT=ios) stataFile%saveCurr%valInt4(i:i)
+                            write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveCurr%valInt4(i:i)
                         case(254_i2)   !ST_float
-                            write(stataFile%saveUnit,IOSTAT=ios) stataFile%saveCurr%valReal4(i:i)
+                            write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveCurr%valReal4(i:i)
                         case(255_i2)   !ST_double
-                            write(stataFile%saveUnit,IOSTAT=ios) stataFile%saveCurr%valReal8(i:i)
+                            write(stataFile%saveUnit, IOSTAT = ios) stataFile%saveCurr%valReal8(i:i)
                         case default
                             call statamodError('unknown data type')
                     end select
@@ -522,7 +522,7 @@ contains
 
         do while(associated(stataFile%saveCurr))
             stataFile%saveHead => stataFile%saveCurr%next
-            deallocate(stataFile%saveCurr, STAT=ios)
+            deallocate(stataFile%saveCurr, STAT = ios)
             if (ios /= 0) call statamodWarn('error deallocating memory')
             stataFile%saveCurr => stataFile%saveHead
         end do
@@ -542,7 +542,7 @@ contains
     end subroutine closeSaveStata
 
 
-    subroutine openStata(fileName,cache)
+    subroutine openStata(fileName, cache)
 
         implicit none
 
@@ -573,66 +573,66 @@ contains
         stataFile%init = .false. !change to true if successful
 
         ! open file
-        inquire(FILE=fileName,EXIST=ex)
+        inquire(FILE = fileName, EXIST = ex)
         if (.not. ex) then
-            call statamodError('file '//fileName//' does not exist')
+            call statamodError('file ' // fileName // ' does not exist')
         end if
 
         call getUnit(stataFile%unit)
-        open(UNIT=stataFile%unit,FILE=fileName,action='read',status='old',access='stream',iostat=ios)
+        open(UNIT = stataFile%unit, FILE = fileName, action = 'read', status = 'old', access = 'stream', iostat = ios)
 
         ! error check
-        if (ios/=0) then
-            call statamodError('error opening file '//filename)
+        if (ios /= 0) then
+            call statamodError('error opening file ' // filename)
         end if
 
         ! read header
-        read(stataFile%unit, IOSTAT=ios) stataFile%ds_format
-        read(stataFile%unit, IOSTAT=ios) stataFile%byteorder
-        read(stataFile%unit, IOSTAT=ios) stataFile%filetype
-        read(stataFile%unit, IOSTAT=ios) tempInt1 !junk
-        read(stataFile%unit, IOSTAT=ios) stataFile%nvar
-        read(stataFile%unit, IOSTAT=ios) stataFile%nobs
+        read(stataFile%unit, IOSTAT = ios) stataFile%ds_format
+        read(stataFile%unit, IOSTAT = ios) stataFile%byteorder
+        read(stataFile%unit, IOSTAT = ios) stataFile%filetype
+        read(stataFile%unit, IOSTAT = ios) tempInt1 !junk
+        read(stataFile%unit, IOSTAT = ios) stataFile%nvar
+        read(stataFile%unit, IOSTAT = ios) stataFile%nobs
 
-        if (versionStata(stataFile%ds_format)=='5') then
-            read(stataFile%unit, IOSTAT=ios) str32
+        if (versionStata(stataFile%ds_format) == '5') then
+            read(stataFile%unit, IOSTAT = ios) str32
             stataFile%data_label = str32
         else
-            read(stataFile%unit, IOSTAT=ios) str81
+            read(stataFile%unit, IOSTAT = ios) str81
             stataFile%data_label = str81
         end if
 
-        read(stataFile%unit, IOSTAT=ios) stataFile%time_stamp
+        read(stataFile%unit, IOSTAT = ios) stataFile%time_stamp
 
-        if (ios==1) then
+        if (ios == 1) then
             call statamodError('error reading from file '//fileName)
         end if
 
         !check header
-        if (versionStata(stataFile%ds_format)=='?') ios=1
-        if (stataFile%byteorder/=1 .and. stataFile%byteorder/=2) ios=1
-        if (stataFile%filetype/=1) ios=1
-        if (stataFile%nvar<0) ios=1
-        if (stataFile%nobs<0) ios=1
+        if (versionStata(stataFile%ds_format) == '?') ios = 1
+        if (stataFile%byteorder /=1 .and. stataFile%byteorder /= 2) ios = 1
+        if (stataFile%filetype /=1) ios = 1
+        if (stataFile%nvar < 0) ios = 1
+        if (stataFile%nobs < 0) ios = 1
 
-        if (ios==1) then
+        if (ios == 1) then
             call statamodError('not a valid STATA file')
         end if
 
-        if (stataFile%nvar==0) then
+        if (stataFile%nvar == 0) then
             call statamodError('file does not contain any variables')
         end if
 
-        if (stataFile%nobs==0) then
+        if (stataFile%nobs == 0) then
             call statamodError('file does not contain any observations')
         end if
 
         !read descriptors
-        allocate(stataFile%typlist(stataFile%nvar), STAT=ios)
-        allocate(stataFile%varlist(stataFile%nvar), STAT=ios)
-        allocate(stataFile%srtlist(stataFile%nvar + 1), STAT=ios)
-        allocate(stataFile%fmtlist(stataFile%nvar), STAT=ios)
-        allocate(stataFile%lbllist(stataFile%nvar), STAT=ios)
+        allocate(stataFile%typlist(stataFile%nvar), STAT = ios)
+        allocate(stataFile%varlist(stataFile%nvar), STAT = ios)
+        allocate(stataFile%srtlist(stataFile%nvar + 1), STAT = ios)
+        allocate(stataFile%fmtlist(stataFile%nvar), STAT = ios)
+        allocate(stataFile%lbllist(stataFile%nvar), STAT = ios)
 
         if (ios /= 0) then
             call statamodError('error allocating memory')
@@ -645,7 +645,7 @@ contains
 
         do i = 1, stataFile%nvar
 
-            if (versionStata(stataFile%ds_format)=='5' .or. versionStata(stataFile%ds_format)=='6') then
+            if (versionStata(stataFile%ds_format) == '5' .or. versionStata(stataFile%ds_format) == '6') then
                 read(stataFile%unit) str9
                 stataFile%varlist(i) = str9
             else
@@ -666,7 +666,7 @@ contains
             read(stataFile%unit) stataFile%srtlist(i)
         end do
 
-        if (stataFile%ds_format>=114) then
+        if (stataFile%ds_format >= 114) then
             do i = 1, stataFile%nvar
                 read(stataFile%unit) stataFile%fmtlist(i)
             end do
@@ -677,20 +677,19 @@ contains
         end if
 
         do i = 1, stataFile%nvar
-
             read(stataFile%unit) stataFile%lbllist(i)
         end do
 
         !read variable labels
 
-        allocate(stataFile%varlabl(stataFile%nvar), STAT=ios)
+        allocate(stataFile%varlabl(stataFile%nvar), STAT = ios)
 
         if (ios /= 0) then
             call statamodError('error allocating memory')
         end if
 
         do i = 1, stataFile%nvar
-            read(stataFile%unit) stataFile%varlabl(i);
+            read(stataFile%unit) stataFile%varlabl(i)
         end do
 
         !skip expansion fields
@@ -698,17 +697,17 @@ contains
         tempInt1 = 1
         tempInt4 = 1
 
-        inquire(unit=stataFile%unit, POS=filePos)
+        inquire(unit = stataFile%unit, POS = filePos)
 
         do while ( tempInt1 /= 0 .and. tempInt4 /=0 )
-            read(stataFile%unit,POS=filePos) tempInt1
+            read(stataFile%unit, POS = filePos) tempInt1
             read(stataFile%unit) tempInt4
-            inquire(unit=stataFile%unit, POS=filePos)
+            inquire(unit = stataFile%unit, POS = filePos)
             filePos = filePos + tempInt4
         end do
         !position of start of data
 
-        inquire(unit=stataFile%unit, POS=stataFile%stataPosition%start)
+        inquire(unit = stataFile%unit, POS = stataFile%stataPosition%start)
 
         allocate(stataFile%stataPosition%offset(stataFile%nvar))
         allocate(stataFile%stataPosition%varpos(stataFile%nvar))
@@ -718,8 +717,8 @@ contains
 
         if (stataFile%nvar > 1) then
             do i = 2, stataFile%nvar
-                stataFile%stataPosition%offset(i) = stataFile%stataPosition%offset(i-1) + sizeStata(stataFile%typlist(i-1))
-                stataFile%stataPosition%varpos(i) = stataFile%stataPosition%varpos(i-1) + sizeStata(stataFile%typlist(i-1))
+                stataFile%stataPosition%offset(i) = stataFile%stataPosition%offset(i - 1) + sizeStata(stataFile%typlist(i - 1))
+                stataFile%stataPosition%varpos(i) = stataFile%stataPosition%varpos(i - 1) + sizeStata(stataFile%typlist(i - 1))
             end do
         end if
 
@@ -736,7 +735,7 @@ contains
 
         if (cacheData) then
 
-            allocate(stataFile%theseData(stataFile%stataPosition%nvarOffset,stataFile%nobs), STAT = ios)
+            allocate(stataFile%theseData(stataFile%stataPosition%nvarOffset, stataFile%nobs), STAT = ios)
 
             if (ios /= 0) then
                 call statamodError('error allocating memory')
@@ -834,7 +833,7 @@ contains
 
         include 'readstata.inc'
 
-        where (readStataVar>0.0_dp)
+        where (readStataVar > 0.0_dp)
             readStataVarLogical = .true.
         else where
             readStataVarLogical = .false.
@@ -855,16 +854,16 @@ contains
             return
         end if
 
-        if (allocated(stataFile%theseData)) deallocate(stataFile%theseData, STAT=err)
+        if (allocated(stataFile%theseData)) deallocate(stataFile%theseData, STAT = err)
 
-        if (allocated(stataFile%typlist))   deallocate(stataFile%typlist,   STAT=err)
-        if (allocated(stataFile%varlist))   deallocate(stataFile%varlist,   STAT=err)
-        if (allocated(stataFile%srtlist))   deallocate(stataFile%srtlist,   STAT=err)
-        if (allocated(stataFile%fmtlist))   deallocate(stataFile%fmtlist,   STAT=err)
-        if (allocated(stataFile%lbllist))   deallocate(stataFile%lbllist,   STAT=err)
-        if (allocated(stataFile%varlabl))   deallocate(stataFile%varlabl,   STAT=err)
+        if (allocated(stataFile%typlist))   deallocate(stataFile%typlist,   STAT = err)
+        if (allocated(stataFile%varlist))   deallocate(stataFile%varlist,   STAT = err)
+        if (allocated(stataFile%srtlist))   deallocate(stataFile%srtlist,   STAT = err)
+        if (allocated(stataFile%fmtlist))   deallocate(stataFile%fmtlist,   STAT = err)
+        if (allocated(stataFile%lbllist))   deallocate(stataFile%lbllist,   STAT = err)
+        if (allocated(stataFile%varlabl))   deallocate(stataFile%varlabl,   STAT = err)
 
-        if (allocated(stataFile%stataPosition%offset)) deallocate(stataFile%stataPosition%offset, STAT=err)
+        if (allocated(stataFile%stataPosition%offset)) deallocate(stataFile%stataPosition%offset, STAT = err)
 
         if (err /= 0) call statamodWarn('error deallocating memory')
 
@@ -891,7 +890,7 @@ contains
 
         thisVarno = varno(varname)
 
-        if (thisVarno==0) then
+        if (thisVarno == 0) then
             existStata = .false.
         else
             existStata = .true.
@@ -941,19 +940,19 @@ contains
             return
         end if
 
-        write (*,*)  'ST_version: ' // versionStata(stataFile%ds_format)
-        write (*,*)  'ST_date:    ' // stataFile%time_stamp
+        write (*, *)  'ST_version: ' // versionStata(stataFile%ds_format)
+        write (*, *)  'ST_date:    ' // stataFile%time_stamp
 
-        write (intToStr,*) stataFile%nvar
-        write (*,*)  'ST_nvars:   ' // adjustl(intToStr)
+        write (intToStr, *) stataFile%nvar
+        write (*, *)  'ST_nvars:   ' // adjustl(intToStr)
 
         write (intToStr,*) stataFile%nobs
-        write (*,*)  'ST_nobs:    ' // adjustl(intToStr)
+        write (*, *)  'ST_nobs:    ' // adjustl(intToStr)
 
-        write (*,*)
+        write (*, *)
 
         do i = 1, stataFile%nvar
-            write (*,*)  typeStata(i) // stataFile%varlist(i)
+            write (*, *)  typeStata(i) // stataFile%varlist(i)
         end do
 
     end subroutine descStata
@@ -1093,12 +1092,12 @@ contains
                 this_month = '???'
         end select
 
-        dateStata = date_time(1)(7:8)//' '//this_month//' '//date_time(1)(1:4)//' '//date_time(2)(1:2)//':'//date_time(2)(3:4)
+        dateStata = date_time(1)(7:8) // ' ' // this_month // ' ' // date_time(1)(1:4) // ' ' // date_time(2)(1:2) // ':' // date_time(2)(3:4)
         dateStata(18:18) = char(0)
 
     end function dateStata
 
-    subroutine statamodError(errmsg,funit)
+    subroutine statamodError(errmsg, funit)
 
         implicit none
 
@@ -1106,10 +1105,10 @@ contains
         integer, optional, intent(in) :: funit
 
         if (present(funit)) then
-            write (funit,*) 'STATAMOD ERROR: ',errmsg
+            write (funit, *) 'STATAMOD ERROR: ',errmsg
             stop 'program terminated by statamodError'
         else
-            write (*,*) 'STATAMOD ERROR: ',errmsg
+            write (*, *) 'STATAMOD ERROR: ',errmsg
             stop 'program terminated by statamodError'
         end if
 
@@ -1117,7 +1116,7 @@ contains
 
     end subroutine statamodError
 
-    subroutine statamodWarn(warnmsg,funit)
+    subroutine statamodWarn(warnmsg, funit)
 
         character(*),      intent(in) :: warnmsg
         integer, optional, intent(in) :: funit
@@ -1125,22 +1124,22 @@ contains
         if (present(funit)) then
             write (funit,*) 'STATAMOD WARNING: ', warnmsg
         else
-            write (*,*) 'STATAMOD WARNING: ', warnmsg
+            write (*, *) 'STATAMOD WARNING: ', warnmsg
         end if
 
         return
 
     end subroutine statamodWarn
 
-    subroutine statamodMsg(msg,funit)
+    subroutine statamodMsg(msg, funit)
 
         character(*),      intent(in) :: msg
         integer, optional, intent(in) :: funit
 
         if (present(funit)) then
-            write (funit,*) 'STATAMOD: ', msg
+            write (funit, *) 'STATAMOD: ', msg
         else
-            write (*,*) 'STATAMOD: ', msg
+            write (*, *) 'STATAMOD: ', msg
         end if
 
         return
@@ -1155,8 +1154,8 @@ contains
         logical        :: opend
         integer, parameter   :: stdout = output_unit
         integer, parameter   :: maxunit = 99
-        do i = stdout+1, maxunit
-            inquire(unit=i, opened=opend)
+        do i = stdout + 1, maxunit
+            inquire(unit = i, opened = opend)
             if (.not. opend) then
                 funit = i
                 exit
