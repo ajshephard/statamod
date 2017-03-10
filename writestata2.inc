@@ -14,14 +14,14 @@
 !    You should have received a copy of the GNU General Public License
 !    along with STATAMOD.  If not, see <http://www.gnu.org/licenses/>.
 
-allocate(stataFile%saveCurr%next, STAT=ios);
+allocate(stataFile%saveCurr%next, STAT = ios);
 
 if (ios /= 0) then
     call statamodError('error allocating memory')
     !close(stataFile%saveUnit)
 end if
 
-stataFile%saveCurr => stataFile%saveCurr%next;
+stataFile%saveCurr => stataFile%saveCurr%next
 nullify(stataFile%saveCurr%next)
 
 ! keep track of variables

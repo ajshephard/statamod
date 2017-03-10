@@ -32,14 +32,14 @@ end if
 write (TempStr33,*) stataFile%saveNObs
 
 if (size(thisVar) /= stataFile%saveNObs) then
-    call statamodError('variable '//trim(thisName)//' is the wrong dimension. '// &
-        & 'Expecting an array of size '//trim(adjustl(TempStr33))//'*1')
+    call statamodError('variable ' // trim(thisName) // ' is the wrong dimension. '// &
+        & 'Expecting an array of size ' // trim(adjustl(TempStr33)) // '*1')
 end if
 
 if (.not. stataFile%saveOnce) then
 
     ! first var to be written
-    allocate(stataFile%saveCurr, STAT=ios);
+    allocate(stataFile%saveCurr, STAT = ios)
 
     if (ios /= 0) then
         call statamodError('error allocating memory')
@@ -56,12 +56,12 @@ if (.not. stataFile%saveOnce) then
 
 end if
 
-if (stataFile%saveNVar>=32767) then
+if (stataFile%saveNVar >= 32767) then
     call statamodError('attempt to exceed Stata maxvar limit (32767)')
     !close(stataFile%saveUnit)
 end if
 
- ! var label
+! var label
 if (present(thisLabel)) then
     tempInt1 = len(thisLabel) + 1
     stataFile%saveCurr%label = thisLabel
@@ -73,16 +73,16 @@ end if
 ! var name, first check whether it is stata legal
 do i = 1, len(trim(thisName))
     select case(ichar(thisName(i:i)))
-        case(48:57,65:90,95,97:122) !0:9,a:z,_,A:Z
+        case(48:57, 65:90, 95, 97:122) !0:9,a:z,_,A:Z
         case default
-            call statamodError('variable name '//thisName//' contains an illegal character. '// &
+            call statamodError('variable name ' // thisName // ' contains an illegal character. ' // &
                 & 'Only alpha-numeric characters and underscore are allowed')
     end select
 end do !I
 
 select case(ichar(thisName(1:1)))
     case(48:57) !0:9
-        call statamodError('variable name '//thisName//' contains an illegal character. '// &
+        call statamodError('variable name ' // thisName // ' contains an illegal character. ' // &
             & 'Names can not begin with a numeric character')
     case default
 end select
@@ -98,7 +98,7 @@ stataFile%saveCurr => stataFile%saveHead
 
 do while(associated(stataFile%saveCurr%next))
     if (tempStr33 == stataFile%saveCurr%name) then
-        call statamodError('a variable already exists with name '//trim(tempStr33))
+        call statamodError('a variable already exists with name ' // trim(tempStr33))
     end if
     stataFile%saveCurr => stataFile%saveCurr%next
 end do
