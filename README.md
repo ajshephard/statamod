@@ -1,23 +1,23 @@
 STATAMOD
 ========
 
-STATAMOD is a Fortran module that provides read/write access for Stata datasets 
+STATAMOD is a Fortran module that provides read/write access for Stata datasets
 from within Fortran. It is written by Andrew Shephard (<asheph@econ.upenn.edu>)
 
 
 Stata read support
 ------------------
 
-The reading of variables from a Stata .dta file is supported through the following 
+The reading of variables from a Stata .dta file is supported through the following
 subroutines and functions.
 
-`subroutine openStata(filename [,cache])`
+`subroutine openStata(filename [, cache])`
 
 This opens the Stata .dta file *filename*. A dataset must be open before any other
 (reading) STATAMOD commands can be used. By default, the entire dataset is loaded
-into memory (`cache=.true.`). If you specify `openStata(filename, cache=.false.)` 
-then it will not do this. Instead, it will just load the variables as requested 
-from disk. As variables are stored non-sequentially in the Stata .dta format, this 
+into memory (`cache=.true.`). If you specify `openStata(filename, cache = .false.)`
+then it will not do this. Instead, it will just load the variables as requested
+from disk. As variables are stored non-sequentially in the Stata .dta format, this
 can be significantly slower than memory access.
 
 `subroutine descStata()`
@@ -60,22 +60,22 @@ use statamod
 
 implicit none
 
-integer, parameter :: dp = selected_real_kind(15,100)
+integer, parameter :: dp = selected_real_kind(15, 100)
 integer :: nObs
 
-real(dp),  dimension(:),   allocatable :: hhincome
-real(dp),  dimension(:,:), allocatable :: hours
+real(dp),  dimension(:),    allocatable :: hhincome
+real(dp),  dimension(:, :), allocatable :: hours
 
 call openStata('statafile.dta')
 call descStata()
 
 nObs = nobsStata()
 allocate(hhincome(nObs))
-allocate(hours(nObs,2))
+allocate(hours(nObs, 2))
 
-call readStata(hhincome,'income')
-call readStata(hours(:,1),'hours_male')
-call readStata(hours(:,2),'hours_female')
+call readStata(hhincome, 'income')
+call readStata(hours(:, 1), 'hours_male')
+call readStata(hours(:, 2), 'hours_female')
 
 call closeOpenStata()
 ```
@@ -85,17 +85,17 @@ Stata write support
 
 There are a small number of subroutines that provide Stata .dta write functionality.
 
-`subroutine saveStata(fileName, obs [,label])`
-            
-This opens the Stata .dta file filename for saving. You must specify the 
-number of observations *obs* to save (saving is on a variable by variable basis), 
-and you can optionaly specify a label for the dataset. It will save the dataset 
+`subroutine saveStata(fileName, obs [, label])`
+
+This opens the Stata .dta file filename for saving. You must specify the
+number of observations *obs* to save (saving is on a variable by variable basis),
+and you can optionaly specify a label for the dataset. It will save the dataset
 in the Stata 7 SE file format.
 
-`subroutine writeStata(thisVar, thisName [,thisLabel])`
+`subroutine writeStata(thisVar, thisName [, thisLabel])`
 
-Saves the Fortran variable *thisVar* with the Stata variable name *thisName*. You can 
-optionally label the variable with *thisLabel*. You should call `writeStata` for 
+Saves the Fortran variable *thisVar* with the Stata variable name *thisName*. You can
+optionally label the variable with *thisLabel*. You should call `writeStata` for
 every variable you wish to save.
 
 `subroutine closeSaveStata()`
@@ -115,7 +115,7 @@ STATAMOD should be able to read Stata .dta files for versions 5 to 12. I have no
 been able to test data created with Stata version 5 or 6 and neither do I have a
 detailed description of the file format implemented in these versions. Please
 contact me if such datasets produces any unexpected results. Support for Stata
-.dta files for version 13 will be provided in a future release.
+.dta files for version 13 and above will be provided in a future release.
 
 Software license
 ----------------
