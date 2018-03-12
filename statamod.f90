@@ -163,7 +163,7 @@ contains
 
     end subroutine sampleStata
 
-    subroutine saveStata(fileName,obs,label)
+    subroutine saveStata(fileName, obs, label)
 
         implicit none
 
@@ -757,7 +757,7 @@ contains
 
     end subroutine openStata
 
-    subroutine readStataReal4(readStataVar,varname)
+    subroutine readStataReal4(readStataVar, varname)
 
         implicit none
 
@@ -770,7 +770,7 @@ contains
 
     end subroutine readStataReal4
 
-    subroutine readStataReal8(readStataVar,varname)
+    subroutine readStataReal8(readStataVar, varname)
 
         implicit none
 
@@ -783,7 +783,7 @@ contains
 
     end subroutine readStataReal8
 
-    subroutine readStataInt1(readStataVar,varname)
+    subroutine readStataInt1(readStataVar, varname)
 
         implicit none
 
@@ -796,7 +796,7 @@ contains
 
     end subroutine readStataInt1
 
-    subroutine readStataInt2(readStataVar,varname)
+    subroutine readStataInt2(readStataVar, varname)
 
         implicit none
 
@@ -809,7 +809,7 @@ contains
 
     end subroutine readStataInt2
 
-    subroutine readStataInt4(readStataVar,varname)
+    subroutine readStataInt4(readStataVar, varname)
 
         implicit none
 
@@ -822,7 +822,7 @@ contains
 
     end subroutine readStataInt4
 
-    subroutine readStataLogical(readStataVarLogical,varname)
+    subroutine readStataLogical(readStataVarLogical, varname)
 
         implicit none
 
@@ -1092,7 +1092,9 @@ contains
                 this_month = '???'
         end select
 
-        dateStata = date_time(1)(7:8) // ' ' // this_month // ' ' // date_time(1)(1:4) // ' ' // date_time(2)(1:2) // ':' // date_time(2)(3:4)
+        dateStata = date_time(1)(7:8) // ' ' // this_month // ' ' // date_time(1)(1:4) // ' ' // date_time(2)(1:2) // ':' &
+            // date_time(2)(3:4)
+
         dateStata(18:18) = char(0)
 
     end function dateStata
@@ -1150,10 +1152,10 @@ contains
         use, intrinsic :: iso_fortran_env
         implicit none
         integer, intent(out) :: funit
-        integer        :: i
-        logical        :: opend
-        integer, parameter   :: stdout = output_unit
-        integer, parameter   :: maxunit = 99
+        integer :: i
+        logical :: opend
+        integer, parameter :: stdout = output_unit
+        integer, parameter :: maxunit = 99
         do i = stdout + 1, maxunit
             inquire(unit = i, opened = opend)
             if (.not. opend) then
